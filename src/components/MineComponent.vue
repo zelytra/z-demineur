@@ -11,7 +11,6 @@ import {io, Socket} from "socket.io-client";
 import GridRenderer from "../vue/GridRenderer.vue";
 import {Cell, Minesweeper} from "../object/Minesweeper";
 import {Player} from "../object/Player";
-import PlayerCursor from "../vue/PlayerCursor.vue";
 
 let socket: Socket;
 let grid = ref<Minesweeper>({});
@@ -20,7 +19,7 @@ let players = ref<Player[]>([]);
 let myPlayer = ref<Player>();
 
 onBeforeMount(() => {
-  socket = io("http://localhost:4242");
+  socket = io("http://zelytra.fr:4242");
   // Listen first player connection init
   socket.on("joinSucess", (data: Player) => myPlayer.value = data);
   document.addEventListener('contextmenu', event => event.preventDefault());
