@@ -47,12 +47,11 @@
 
 // Global color variable
 body {
-  --primary: #7996FC;
-  --secondary: #414141;
-  --primary-text: #FFFFFF;
-  --secondary-text: #C9C9C9;
-  --yellow-badge: #F3C05D;
-  --blue-badge: #256F8E;
+  --grid-hide-primary: #A1D049;
+  --grid-hide-secondary: #B9DD77;
+  --grid-show-primary: #D7B899;
+  --grid-show-secondary: #E5C29F;
+
   --background-color: #2D2D2D;
 }
 

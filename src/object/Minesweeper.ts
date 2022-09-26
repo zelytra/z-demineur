@@ -1,15 +1,14 @@
 export interface Minesweeper {
-    grid: Cell[][]
+    grid?: Cell[][]
+
 }
 
-export class Cell {
+export interface Cell {
 
-    public hasMine: boolean = false
-    public isFlag: boolean = false
-    public isHide: boolean = false
+    hasMine: boolean,
+    isFlag: boolean,
+    isHide: boolean,
+    bombArround: number,
+    position: { x: number, y: number }
 
-    getMineNumber(grid: Minesweeper): number {
-        //TODO
-        return 0;
-    }
 }
