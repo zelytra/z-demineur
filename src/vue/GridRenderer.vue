@@ -8,7 +8,7 @@
           v-on:mousedown.left="$emit('reveal',cell)"
           v-on:mousedown.right="$emit('flag',cell)"
       >
-        <img src="src/assets/bomb.svg" v-if="cell.hasMine && !cell.isHide" style="width: 24px">
+        <img src="src/assets/bomb.svg" v-if="cell.hasMine && !cell.isHide" style="width: 18px">
         <p v-if="cell.bombArround > 0 && !cell.hasMine && !cell.isHide"
            :style="{color:getColorBomb(cell.bombArround)}">{{ cell.bombArround }}</p>
         <img style="width: 24px" v-if="cell.isHide && cell.isFlag" src="src/assets/flag_icon.png"/>
@@ -48,20 +48,28 @@ function getColorBomb(bombNumber: number) {
 
 <style scoped lang="scss">
 .grid-wrapper {
-  width: 100%;
+
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
+  transform: scale(1.1);
+  border-radius: 4px;
+  overflow: hidden;
+  width: fit-content;
+  height: fit-content;
 
   .cell {
     width: 24px;
     height: 24px;
+    display: flex;
+    justify-content: center;
 
     p {
       text-align: center;
-      font-size: 22px;
+      font-size: 18px;
+      font-family: Jost-Medium;
     }
   }
 

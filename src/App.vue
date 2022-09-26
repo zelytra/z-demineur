@@ -7,5 +7,8 @@ import MineComponent from "./components/MineComponent.vue";
 </script>
 
 <style scoped lang="scss">
-
+#app{
+  position: absolute;
+  overflow: hidden;
+}
 </style>

@@ -9,6 +9,7 @@ export class Minesweeper {
             this.grid[x] = [];
             for (let y = 0; y <= size; y++) {
                 let cell: Cell = new Cell(false, x, y);
+                //Refaire l'algo avec x et y random plutot
                 if (this.randomIntFromInterval(0, 100) <= this.bombLuck) cell = new Cell(true, x, y);
                 this.grid[x][y] = cell;
             }
@@ -31,6 +32,8 @@ export class Cell {
     public position: Position;
     public bombArround: number = 0;
 
+    public hasBeenCheckedByEmptyFinder: boolean = false;
+
     constructor(mine: boolean, x: number, y: number) {
         this.hasMine = mine;
         this.position = {x: x, y: y};
@@ -39,12 +42,39 @@ export class Cell {
     initBombAmount(grid: Cell[][]) {
         for (let x = Math.max(0, this.position.x - 1); x <= Math.min(grid.length - 1, this.position.x + 1); x++) {
             for (let y = Math.max(0, this.position.y - 1); y <= Math.min(this.position.y + 1, grid.length - 1); y++) {
-                //console.log(x + " " + y)
                 if (grid[x][y] && grid[x][y].hasMine) this.bombArround++;
             }
         }
     }
 
+    reveal(grid: Cell[][]) {
+        if (this.hasMine) {
+            //TODO defeat listener
+            //return;
+        }
+
+        if (!this.isHide) return;
+        this.isHide = false;
+
+        if (this.bombArround == 0) {
+            this.recursiveEmptyCellChecker(grid);
+        }
+
+    }
+
+    recursiveEmptyCellChecker(grid: Cell[][]) {
+
+        for (let x = Math.max(0, this.position.x - 1); x <= Math.min(grid.length - 1, this.position.x + 1); x++) {
+            for (let y = Math.max(0, this.position.y - 1); y <= Math.min(this.position.y + 1, grid.length - 1); y++) {
+                let cell: Cell = grid[x][y];
+                if (cell.hasBeenCheckedByEmptyFinder) break;
+                if (cell && !cell.hasMine) { //Wall stopper
+                    cell.reveal(grid);
+                }
+            }
+        }
+        this.hasBeenCheckedByEmptyFinder = true;
+    }
 }
 
 export interface Position {
