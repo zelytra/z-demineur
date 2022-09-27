@@ -1,25 +1,32 @@
 <template>
   <MinesweeperHeader :player="myPlayer"/>
   <div class="wrapper">
-    <GridRenderer :grid="grid" @mouseMove="mouseMove" @flag="onFlag" @reveal="onReveal" :playerList="displayPlayerList"
-                  :myPlayer="myPlayer"/>
+    <GridRenderer :grid="grid"
+                  @mouseMove="mouseMove"
+                  @flag="onFlag"
+                  @reveal="onReveal"
+                  :playerList="displayPlayerList"
+                  :myPlayer="myPlayer"
+    />
+    <ScoreBoard :players="players"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import {onBeforeMount, onBeforeUnmount, onMounted, onUnmounted, ref} from "vue";
+import {onBeforeMount, onBeforeUnmount, onMounted, ref} from "vue";
 import MinesweeperHeader from "/src/components/MinesweeperHeader.vue"
 import {io, Socket} from "socket.io-client";
 import GridRenderer from "../vue/GridRenderer.vue";
 import {Cell, Minesweeper} from "../object/Minesweeper";
 import {Player} from "../object/Player";
+import ScoreBoard from "../vue/ScoreBoard.vue";
 
 let socket: Socket;
 let grid = ref<Minesweeper>({});
 
 let players = ref<Player[]>([]);
 let displayPlayerList = ref<Player[]>([]);
-let myPlayer = ref<Player>({name: "", mousePosition: {x: 0, y: 0}});
+let myPlayer = ref<Player>({name: "", score: 0, color: '#FFFF', mousePosition: {x: 0, y: 0}});
 
 onBeforeMount(() => {
   socket = io("http://localhost:4242");
@@ -58,8 +65,8 @@ onMounted(() => {
 
   // Listen mouse update
   socket.on("playerUpdate", (data: Player[]) => {
-    players.value = data;
-    displayPlayerList.value = data;
+    players.value = clone(data);
+    displayPlayerList.value = clone(data);
     players.value.forEach(x => {
       if (myPlayer.value && x.name == myPlayer.value?.name) {
         myPlayer.value.mousePosition = x.mousePosition;
@@ -69,9 +76,15 @@ onMounted(() => {
   })
 });
 
+function clone(toCopy: any[]) {
+  let newArray: any[] = [];
+  toCopy.forEach(x => newArray.push(x));
+  return newArray;
+}
+
 function updateDisplayPlayerList(name: string) {
   displayPlayerList.value.forEach((item, index) => {
-    if (item.name === name) displayPlayerList.value.splice(index, 1);
+    if (item.name == name) displayPlayerList.value.splice(index, 1);
   });
 }
 
@@ -82,7 +95,6 @@ function updateDisplayPlayerList(name: string) {
   width: auto;
   display: flex;
   justify-content: center;
-  align-items: center;
   overflow: hidden;
   margin: 8px auto auto;
 }

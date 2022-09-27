@@ -5,7 +5,7 @@ import {Player} from "../../src/object/Player";
 // Server variables
 const app = express();
 const http = require("http").Server(app);
-const Socketio = require('socket.io')(http,{
+const Socketio = require('socket.io')(http, {
     cors: {
         origin: '*',
     }
@@ -22,20 +22,23 @@ Socketio.on("connection", function (socket: any) {
     //Adding new player to instance
     let newPlayer: Player = {
         name: socket.id,
+        color: getRandomColor(),
+        score:Math.floor(Math.random()*100),
         mousePosition: {
             x: 0,
             y: 0
         }
-    }
+    };
     players.push(newPlayer);
     socket.emit("joinSuccess", newPlayer);
+    Socketio.emit("playerUpdate", players);
     console.log('▲ Player ' + socket.id + ' join the party !')
 
     // On player disconnect
     socket.on("disconnect", () => {
         // Update mouses list and position
         removePlayer(socket.id);
-        Socketio.emit("playerUpdate", players);
+        //Socketio.emit("playerUpdate", players);
         console.log('▼ Player ' + socket.id + ' left the party =(')
     });
 
@@ -57,7 +60,7 @@ Socketio.on("connection", function (socket: any) {
         Socketio.emit("grid", game);
     })
 
-    // Track players mouses
+    // Track players data updates
     socket.on("playerUpdate", (player: Player) => {
         players.forEach(x => {
             if (player.name == x.name) {
@@ -80,4 +83,38 @@ function removePlayer(name: string) {
         if (item.name === name) players.splice(index, 1);
     });
 }
+
+const playerColorsList: string[] = [
+    '#071A3C',
+    '#F94144',
+    '#F3722C',
+    '#F8961E',
+    '#F9844A',
+    '#F9C74F',
+    '#90BE6D',
+    '#43AA8B',
+    '#4D908E',
+    '#577590',
+    '#277DA1',
+    '#b5e48c',
+    '#76c893',
+    '#001219',
+    '#005f73',
+    '#0a9396',
+    '#94d2bd',
+    '#e9d8a6',
+    '#ee9b00',
+    '#ca6702',
+    '#bb3e03',
+    '#ae2012',
+    '#9b2226',
+    '#3c096c',
+    '#5a189a',
+    '#7b2cbf',
+    '#9d4edd']
+
+function getRandomColor() {
+    return playerColorsList[Math.floor(Math.random() * playerColorsList.length)];
+}
+
 

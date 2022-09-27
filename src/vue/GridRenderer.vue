@@ -66,7 +66,7 @@ function getColorBomb(bombNumber: number) {
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  border-radius: 4px;
+  border-radius: 4px 0px 0px 4px;
   overflow: hidden;
 
 
