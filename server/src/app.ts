@@ -28,13 +28,13 @@ Socketio.on("connection", function (socket: any) {
         }
     }
     players.push(newPlayer);
-    socket.emit("joinSucess", newPlayer);
+    socket.emit("joinSuccess", newPlayer);
     console.log('▲ Player ' + socket.id + ' join the party !')
 
     // On player disconnect
     socket.on("disconnect", () => {
         // Update mouses list and position
-        removePlayer(socket);
+        removePlayer(socket.id);
         Socketio.emit("playerUpdate", players);
         console.log('▼ Player ' + socket.id + ' left the party =(')
     });
@@ -76,7 +76,6 @@ http.listen(port, () => {
 })
 
 function removePlayer(name: string) {
-
     players.forEach((item, index) => {
         if (item.name === name) players.splice(index, 1);
     });

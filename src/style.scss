@@ -52,11 +52,17 @@ body {
   --grid-show-primary: #D7B899;
   --grid-show-secondary: #E5C29F;
 
+  --primary: #A1D049;
+  --secondary: #414141;
+  --primary-text: #FFFFFF;
+  --secondary-text: #C9C9C9;
+  --yellow-badge: #F3C05D;
+  --blue-badge: #256F8E;
   --background-color: #2D2D2D;
 }
 
 body.dark-theme {
-  --primary: #7996FC;
+  --primary: #A1D049;
   --secondary: #414141;
   --primary-text: #FFFFFF;
   --secondary-text: #C9C9C9;

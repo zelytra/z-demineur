@@ -7,21 +7,6 @@
 	<polygon :style={fill:randomColor} points="46.943,401.292 166.905,257.261 46.943,0 	"/>
   <polygon :style={fill:randomColor} points="46.943,0 166.905,257.261 354.349,257.945 	"/>
 </g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
 </svg>
 
   <p>{{ player.name }}</p>
@@ -67,7 +52,6 @@ onMounted(() => {
   position: absolute;
   width: 16px;
   height: 16px;
-  border-radius: 24px;
   z-index: 99;
 }
 </style>

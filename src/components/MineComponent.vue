@@ -1,12 +1,14 @@
 <template>
-  <div class="wrapper" v-on:mousemove="mouseMove">
-    <GridRenderer :grid="grid" @flag="onFlag" @reveal="onReveal"/>
-    <!--<PlayerCursor v-for="player in players" :player="player"/>-->
+  <MinesweeperHeader :player="myPlayer"/>
+  <div class="wrapper">
+    <GridRenderer :grid="grid" @mouseMove="mouseMove" @flag="onFlag" @reveal="onReveal" :playerList="displayPlayerList"
+                  :myPlayer="myPlayer"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import {onBeforeMount, onMounted, ref} from "vue";
+import {onBeforeMount, onBeforeUnmount, onMounted, onUnmounted, ref} from "vue";
+import MinesweeperHeader from "/src/components/MinesweeperHeader.vue"
 import {io, Socket} from "socket.io-client";
 import GridRenderer from "../vue/GridRenderer.vue";
 import {Cell, Minesweeper} from "../object/Minesweeper";
@@ -16,19 +18,26 @@ let socket: Socket;
 let grid = ref<Minesweeper>({});
 
 let players = ref<Player[]>([]);
-let myPlayer = ref<Player>();
+let displayPlayerList = ref<Player[]>([]);
+let myPlayer = ref<Player>({name: "", mousePosition: {x: 0, y: 0}});
 
 onBeforeMount(() => {
-  socket = io("http://zelytra.fr:4242");
+  socket = io("http://localhost:4242");
   // Listen first player connection init
-  socket.on("joinSucess", (data: Player) => myPlayer.value = data);
+  socket.on("joinSuccess", (data: Player) => myPlayer.value = data);
   document.addEventListener('contextmenu', event => event.preventDefault());
+})
+
+onBeforeUnmount(() => {
+  socket.removeAllListeners();
+  socket.close();
 })
 
 function mouseMove(event: any) {
   if (!myPlayer.value) return;
-  myPlayer.value.mousePosition.x = event.pageX;
-  myPlayer.value.mousePosition.y = event.pageY;
+  let rect = document.getElementById("grid-wrapper")!.getBoundingClientRect();
+  myPlayer.value.mousePosition.x = event.pageX - rect.left;
+  myPlayer.value.mousePosition.y = event.pageY - rect.top;
   socket.emit("playerUpdate", myPlayer.value)
 }
 
@@ -50,26 +59,32 @@ onMounted(() => {
   // Listen mouse update
   socket.on("playerUpdate", (data: Player[]) => {
     players.value = data;
+    displayPlayerList.value = data;
     players.value.forEach(x => {
       if (myPlayer.value && x.name == myPlayer.value?.name) {
-        myPlayer.value.mousePosition = x.mousePosition
+        myPlayer.value.mousePosition = x.mousePosition;
       }
     })
+    updateDisplayPlayerList(myPlayer.value.name);
   })
 });
+
+function updateDisplayPlayerList(name: string) {
+  displayPlayerList.value.forEach((item, index) => {
+    if (item.name === name) displayPlayerList.value.splice(index, 1);
+  });
+}
 
 </script>
 
 <style scoped lang="scss">
 .wrapper {
-  position: relative;
   width: auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  margin: auto;
   overflow: hidden;
+  margin: 8px auto auto;
 }
 
 </style>

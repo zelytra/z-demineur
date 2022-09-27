@@ -1,5 +1,6 @@
 <template>
-  <div class="grid-wrapper">
+  <div id="grid-wrapper" v-on:mousemove="$emit('mouseMove',$event)">
+    <PlayerCursor v-for="player in playerList" :player="player"/>
     <div class="line" v-for="line in grid.grid">
       <div
           class="cell"
@@ -18,10 +19,20 @@
 </template>
 
 <script setup lang="ts">
+import PlayerCursor from "/src/vue/PlayerCursor.vue"
 import {PropType} from 'vue'
 import {Minesweeper} from "../object/Minesweeper";
+import {Player} from "../object/Player";
 
 const props = defineProps({
+  myPlayer: {
+    type: Object as PropType<Player>,
+    required: true
+  },
+  playerList: {
+    type: Object as PropType<Player[]>,
+    required: true
+  },
   grid: {
     type: Object as PropType<Minesweeper>,
     required: true
@@ -47,18 +58,17 @@ function getColorBomb(bombNumber: number) {
 </script>
 
 <style scoped lang="scss">
-.grid-wrapper {
+#grid-wrapper {
 
+  position: relative;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  transform: scale(1.1);
   border-radius: 4px;
   overflow: hidden;
-  width: fit-content;
-  height: fit-content;
+
 
   .cell {
     width: 24px;
@@ -88,7 +98,6 @@ function getColorBomb(bombNumber: number) {
       background-color: var(--grid-hide-secondary);
     }
   }
-
 
   .cell:hover {
     background-color: #ffd1b4 !important;
