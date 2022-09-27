@@ -10,8 +10,8 @@
           v-on:mousedown.right="$emit('flag',cell)"
       >
         <img src="src/assets/bomb.svg" v-if="cell.hasMine && !cell.isHide" style="width: 18px">
-        <p v-if="cell.bombArround > 0 && !cell.hasMine && !cell.isHide"
-           :style="{color:getColorBomb(cell.bombArround)}">{{ cell.bombArround }}</p>
+        <p v-if="cell.bombAround > 0 && !cell.hasMine && !cell.isHide"
+           :style="{color:getColorBomb(cell.bombAround)}">{{ cell.bombAround }}</p>
         <img style="width: 24px" v-if="cell.isHide && cell.isFlag" src="src/assets/flag_icon.png"/>
       </div>
     </div>

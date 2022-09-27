@@ -17,30 +17,40 @@ let game: Minesweeper;
 let players: Player[] = [];
 
 Socketio.on("connection", function (socket: any) {
-    socket.emit("grid", game);
-
-    //Adding new player to instance
-    let newPlayer: Player = {
-        name: socket.id,
-        color: getRandomColor(),
-        score:Math.floor(Math.random()*100),
-        mousePosition: {
-            x: 0,
-            y: 0
-        }
-    };
-    players.push(newPlayer);
-    socket.emit("joinSuccess", newPlayer);
     Socketio.emit("playerUpdate", players);
-    console.log('▲ Player ' + socket.id + ' join the party !')
+    if (game && game.isRunning) socket.emit("grid", game);
 
     // On player disconnect
     socket.on("disconnect", () => {
         // Update mouses list and position
         removePlayer(socket.id);
-        //Socketio.emit("playerUpdate", players);
-        console.log('▼ Player ' + socket.id + ' left the party =(')
+        Socketio.emit("playerUpdate", players);
     });
+
+    // On player join
+    socket.on("join", (data: string) => {
+        //Adding new player to instance
+        let newPlayer: Player = {
+            name: data,
+            id: socket.id,
+            isLog: true,
+            color: getRandomColor(),
+            score: Math.floor(Math.random() * 100),
+            mousePosition: {
+                x: 0,
+                y: 0
+            }
+        };
+        players.push(newPlayer);
+        console.log('▲ ' + newPlayer.name + ' join the party !')
+        socket.emit("joinSuccess", newPlayer);
+    })
+
+    // Start event
+    socket.on("start", () => {
+        game = new Minesweeper(25);
+        Socketio.emit("grid", game);
+    })
 
     // Set a flag on the cell
     socket.on("flag", (data: Position) => {
@@ -75,12 +85,14 @@ Socketio.on("connection", function (socket: any) {
 
 http.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
-    game = new Minesweeper(25);
 })
 
-function removePlayer(name: string) {
+function removePlayer(id: string) {
     players.forEach((item, index) => {
-        if (item.name === name) players.splice(index, 1);
+        if (item.id === id) {
+            console.log('▼ Player ' + item.name + ' left the party =(');
+            players.splice(index, 1);
+        }
     });
 }
 

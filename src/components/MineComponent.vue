@@ -1,20 +1,23 @@
 <template>
-  <MinesweeperHeader :player="myPlayer"/>
+  <MinesweeperHeader :player="myPlayer" v-on:click="startGame"/>
   <div class="wrapper">
+    <PlayerMenu :player="myPlayer" v-if="!myPlayer.isLog" @joinGame="onJoinGame"/>
     <GridRenderer :grid="grid"
                   @mouseMove="mouseMove"
                   @flag="onFlag"
                   @reveal="onReveal"
                   :playerList="displayPlayerList"
                   :myPlayer="myPlayer"
+                  v-if="grid.isRunning"
     />
-    <ScoreBoard :players="players"/>
+    <ScoreBoard :players="players" v-if="grid.isRunning"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import {onBeforeMount, onBeforeUnmount, onMounted, ref} from "vue";
 import MinesweeperHeader from "/src/components/MinesweeperHeader.vue"
+import PlayerMenu from "/src/vue/PlayerMenu.vue";
 import {io, Socket} from "socket.io-client";
 import GridRenderer from "../vue/GridRenderer.vue";
 import {Cell, Minesweeper} from "../object/Minesweeper";
@@ -22,14 +25,14 @@ import {Player} from "../object/Player";
 import ScoreBoard from "../vue/ScoreBoard.vue";
 
 let socket: Socket;
-let grid = ref<Minesweeper>({});
+let grid = ref<Minesweeper>({isRunning: false});
 
 let players = ref<Player[]>([]);
 let displayPlayerList = ref<Player[]>([]);
-let myPlayer = ref<Player>({name: "", score: 0, color: '#FFFF', mousePosition: {x: 0, y: 0}});
+let myPlayer = ref<Player>({name: "", id: "", isLog: false, score: 0, color: '#FFFF', mousePosition: {x: 0, y: 0}});
 
 onBeforeMount(() => {
-  socket = io("http://zelytra.fr:4242");
+  socket = io("http://localhost:4242");
   // Listen first player connection init
   socket.on("joinSuccess", (data: Player) => myPlayer.value = data);
   document.addEventListener('contextmenu', event => event.preventDefault());
@@ -39,6 +42,14 @@ onBeforeUnmount(() => {
   socket.removeAllListeners();
   socket.close();
 })
+
+function startGame(){
+  socket.emit("start");
+}
+
+function onJoinGame(playerName: string) {
+  socket.emit("join", playerName);
+}
 
 function mouseMove(event: any) {
   if (!myPlayer.value) return;

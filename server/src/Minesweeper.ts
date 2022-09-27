@@ -1,5 +1,6 @@
 export class Minesweeper {
     public grid: Cell[][];
+    public isRunning: boolean = false;
 
     private bombLuck: number = 15;
 
@@ -15,12 +16,13 @@ export class Minesweeper {
             }
         }
         this.grid.forEach(x => x.forEach(y => y.initBombAmount(this.grid)))
-
+        this.isRunning = true;
     }
 
     randomIntFromInterval(min: number, max: number) { // min and max included
         return Math.floor(Math.random() * (max - min + 1) + min)
     }
+
 
 }
 

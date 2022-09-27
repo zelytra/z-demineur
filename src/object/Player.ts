@@ -4,5 +4,7 @@ export interface Player {
     name: string,
     mousePosition: Position,
     score: number,
-    color:string,
+    color: string,
+    isLog: boolean,
+    id: string
 }

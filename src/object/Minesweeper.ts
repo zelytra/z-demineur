@@ -1,5 +1,6 @@
 export interface Minesweeper {
-    grid?: Cell[][]
+    grid: Cell[][],
+    isRunning: boolean
 
 }
 
@@ -8,7 +9,7 @@ export interface Cell {
     hasMine: boolean,
     isFlag: boolean,
     isHide: boolean,
-    bombArround: number,
+    bombAround: number,
     position: { x: number, y: number }
 
 }
