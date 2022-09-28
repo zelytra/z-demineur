@@ -8,9 +8,9 @@
                   @reveal="onReveal"
                   :playerList="displayPlayerList"
                   :myPlayer="myPlayer"
-                  v-if="grid.isRunning"
+                  v-if="grid && grid.isRunning"
     />
-    <ScoreBoard :players="players" v-if="grid.isRunning"/>
+    <ScoreBoard :players="players" v-if="grid && grid.isRunning"/>
   </div>
 </template>
 
@@ -25,7 +25,7 @@ import {Player} from "../object/Player";
 import ScoreBoard from "../vue/ScoreBoard.vue";
 
 let socket: Socket;
-let grid = ref<Minesweeper>({isRunning: false});
+let grid = ref<Minesweeper>();
 
 let players = ref<Player[]>([]);
 let displayPlayerList = ref<Player[]>([]);

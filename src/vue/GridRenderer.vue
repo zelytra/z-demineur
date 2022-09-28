@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import PlayerCursor from "/src/vue/PlayerCursor.vue"
-import {PropType} from 'vue'
+import {onMounted, PropType} from 'vue'
 import {Minesweeper} from "../object/Minesweeper";
 import {Player} from "../object/Player";
 

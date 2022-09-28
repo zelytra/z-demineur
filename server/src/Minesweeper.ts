@@ -32,7 +32,7 @@ export class Cell {
     public isFlag: boolean = false
     public isHide: boolean = true
     public position: Position;
-    public bombArround: number = 0;
+    public bombAround: number = 0;
 
     public hasBeenCheckedByEmptyFinder: boolean = false;
 
@@ -44,7 +44,7 @@ export class Cell {
     initBombAmount(grid: Cell[][]) {
         for (let x = Math.max(0, this.position.x - 1); x <= Math.min(grid.length - 1, this.position.x + 1); x++) {
             for (let y = Math.max(0, this.position.y - 1); y <= Math.min(this.position.y + 1, grid.length - 1); y++) {
-                if (grid[x][y] && grid[x][y].hasMine) this.bombArround++;
+                if (grid[x][y] && grid[x][y].hasMine) this.bombAround++;
             }
         }
     }
@@ -58,7 +58,7 @@ export class Cell {
         if (!this.isHide) return;
         this.isHide = false;
 
-        if (this.bombArround == 0) {
+        if (this.bombAround == 0) {
             this.recursiveEmptyCellChecker(grid);
         }
 
