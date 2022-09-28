@@ -1,6 +1,9 @@
+import {Player} from "../../src/object/Player";
+
 export class Minesweeper {
     public grid: Cell[][];
     public isRunning: boolean = false;
+    public gameIsLose: boolean = false;
 
     private bombLuck: number = 15;
 
@@ -49,29 +52,48 @@ export class Cell {
         }
     }
 
-    reveal(grid: Cell[][]) {
-        if (this.hasMine) {
-            //TODO defeat listener
-            //return;
-        }
+    reveal(game: Minesweeper, player: Player) {
 
         if (!this.isHide) return;
         this.isHide = false;
 
+        if (this.hasMine) {
+            game.gameIsLose = true;
+            player.score = 0;
+            game.grid.forEach(x => x.forEach(y => y.isHide = false))
+            return;
+        }
+
         if (this.bombAround == 0) {
-            this.recursiveEmptyCellChecker(grid);
+            this.recursiveEmptyCellChecker(game);
+            return;
+        }
+
+        player.score += 5;
+
+    }
+
+    autoReveal(game: Minesweeper) {
+
+        if (!this.isHide) return;
+        this.isHide = false;
+
+
+        if (this.bombAround == 0) {
+            this.recursiveEmptyCellChecker(game);
+            return;
         }
 
     }
 
-    recursiveEmptyCellChecker(grid: Cell[][]) {
+    recursiveEmptyCellChecker(game: Minesweeper) {
 
-        for (let x = Math.max(0, this.position.x - 1); x <= Math.min(grid.length - 1, this.position.x + 1); x++) {
-            for (let y = Math.max(0, this.position.y - 1); y <= Math.min(this.position.y + 1, grid.length - 1); y++) {
-                let cell: Cell = grid[x][y];
+        for (let x = Math.max(0, this.position.x - 1); x <= Math.min(game.grid.length - 1, this.position.x + 1); x++) {
+            for (let y = Math.max(0, this.position.y - 1); y <= Math.min(this.position.y + 1, game.grid.length - 1); y++) {
+                let cell: Cell = game.grid[x][y];
                 if (cell.hasBeenCheckedByEmptyFinder) break;
                 if (cell && !cell.hasMine) { //Wall stopper
-                    cell.reveal(grid);
+                    cell.autoReveal(game);
                 }
             }
         }

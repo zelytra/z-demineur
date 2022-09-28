@@ -1,10 +1,14 @@
 <template>
   <div class="wrapper-header">
-    <h1>Z-Demineur</h1>
+    <div class="app-name">
+      <h1>Z-Demineur</h1>
+      <button class="restart" v-on:click="$emit('restart')">Recommencer</button>
+    </div>
     <h2>#4269</h2>
     <div class="profile-wrapper">
       <p>{{ player.name }}</p>
-      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+           x="0px" y="0px"
            viewBox="0 0 459 459" style="enable-background:new 0 0 459 459;" xml:space="preserve">
 <g>
 	<g>
@@ -54,7 +58,7 @@
 import {PropType} from "vue";
 import {Player} from "../object/Player";
 
-const props = defineProps({
+defineProps({
   player: {
     type: Object as PropType<Player>,
     required: true
@@ -70,22 +74,51 @@ const props = defineProps({
   margin: auto;
   align-items: center;
 
-  h1{
+  .app-name {
+    display: flex;
+    align-items: center;
+
+    button {
+      margin-left: 8px;
+      margin-top: 2px;
+      width: auto;
+      background-color: var(--primary);
+      padding: 2px;
+      height: 36px;
+      border-radius: 12px;
+      border-radius: 12px;
+      border: none;
+
+      color: var(--primary-text);
+      font-family: Jost-Regular;
+      font-size: 16px;
+      transition: 100ms;
+
+    }
+
+    button:hover {
+      background-color: #b7e166;
+    }
+  }
+
+
+  h1 {
     color: var(--primary-text);
     font-size: 26px;
     font-family: Jost-SemiBold;
   }
 
-  h2{
+  h2 {
     color: var(--primary-text);
     font-size: 16px;
     font-family: Jost-MediumItalic;
   }
 
-  .profile-wrapper{
+  .profile-wrapper {
     display: flex;
     align-items: center;
-    p{
+
+    p {
       color: var(--primary-text);
       font-size: 16px;
       font-family: Jost-Medium;
@@ -93,7 +126,7 @@ const props = defineProps({
     }
   }
 
-  svg{
+  svg {
     width: 28px;
     fill: var(--grid-hide-primary);
   }

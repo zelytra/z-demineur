@@ -1,5 +1,5 @@
 <template>
-  <MinesweeperHeader :player="myPlayer" v-on:click="startGame"/>
+  <MinesweeperHeader :player="myPlayer" @restart="startGame"/>
   <div class="wrapper">
     <PlayerMenu :player="myPlayer" v-if="!myPlayer.isLog" @joinGame="onJoinGame"/>
     <GridRenderer :grid="grid"
@@ -43,7 +43,7 @@ onBeforeUnmount(() => {
   socket.close();
 })
 
-function startGame(){
+function startGame() {
   socket.emit("start");
 }
 
@@ -64,7 +64,7 @@ function onFlag(cell: Cell) {
 }
 
 function onReveal(cell: Cell) {
-  socket.emit("reveal", cell.position);
+  socket.emit("reveal", {player: myPlayer.value, position: cell.position});
 }
 
 onMounted(() => {

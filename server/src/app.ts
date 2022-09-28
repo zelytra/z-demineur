@@ -35,7 +35,7 @@ Socketio.on("connection", function (socket: any) {
             id: socket.id,
             isLog: true,
             color: getRandomColor(),
-            score: Math.floor(Math.random() * 100),
+            score: 0,
             mousePosition: {
                 x: 0,
                 y: 0
@@ -62,12 +62,19 @@ Socketio.on("connection", function (socket: any) {
     })
 
     // Reveal cell of minesweeper
-    socket.on("reveal", (data: Position) => {
+    socket.on("reveal", (data: { player: Player, position: Position }) => {
 
-        const cell: Cell = game.grid[data.x][data.y];
-        cell.reveal(game.grid);
-        game.grid.forEach(x => x.forEach(y => y.hasBeenCheckedByEmptyFinder = false))
+        const cell: Cell = game.grid[data.position.x][data.position.y];
+        const findPlayer = players.find(x => x.id == data.player.id)
+        if (!findPlayer) {
+            console.log("Player not found")
+            return;
+        }
+        cell.reveal(game, findPlayer);
+        game.grid.forEach(x => x.forEach(y => y.hasBeenCheckedByEmptyFinder = false));
+
         Socketio.emit("grid", game);
+        Socketio.emit("playerUpdate", players);
     })
 
     // Track players data updates
