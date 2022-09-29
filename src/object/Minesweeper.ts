@@ -1,6 +1,7 @@
 export interface Minesweeper {
     grid: Cell[][],
     isRunning: boolean
+    gameIsLose: boolean
 }
 
 export interface Cell {

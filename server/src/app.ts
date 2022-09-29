@@ -44,12 +44,20 @@ Socketio.on("connection", function (socket: any) {
         players.push(newPlayer);
         console.log('▲ ' + newPlayer.name + ' join the party !')
         socket.emit("joinSuccess", newPlayer);
+        Socketio.emit("playerUpdate", players);
+
+        if (!game || !game.isRunning){
+            game = new Minesweeper(25);
+            Socketio.emit("grid", game);
+        }
     })
 
     // Start event
     socket.on("start", () => {
+        players.forEach(x => x.score = 0);
         game = new Minesweeper(25);
         Socketio.emit("grid", game);
+        Socketio.emit("playerUpdate", players);
     })
 
     // Set a flag on the cell

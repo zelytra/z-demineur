@@ -9,10 +9,12 @@
           v-on:mousedown.left="$emit('reveal',cell)"
           v-on:mousedown.right="$emit('flag',cell)"
       >
-        <img src="src/assets/bomb.svg" v-if="cell.hasMine && !cell.isHide" style="width: 18px">
-        <p v-if="cell.bombAround > 0 && !cell.hasMine && !cell.isHide"
-           :style="{color:getColorBomb(cell.bombAround)}">{{ cell.bombAround }}</p>
-        <img style="width: 24px" v-if="cell.isHide && cell.isFlag" src="src/assets/flag_icon.png"/>
+        <transition-group name="cell-animation">
+          <img src="src/assets/bomb.svg" v-if="cell.hasMine && !cell.isHide" style="width: 18px">
+          <p v-if="cell.bombAround > 0 && !cell.hasMine && !cell.isHide"
+             :style="{color:getColorBomb(cell.bombAround)}">{{ cell.bombAround }}</p>
+          <img style="width: 24px" v-if="cell.isHide && cell.isFlag" src="src/assets/flag_icon.png"/>
+        </transition-group>
       </div>
     </div>
   </div>
@@ -20,7 +22,7 @@
 
 <script setup lang="ts">
 import PlayerCursor from "/src/vue/PlayerCursor.vue"
-import {onMounted, PropType} from 'vue'
+import {onMounted, PropType, ref} from 'vue'
 import {Minesweeper} from "../object/Minesweeper";
 import {Player} from "../object/Player";
 
@@ -75,6 +77,15 @@ function getColorBomb(bombNumber: number) {
     height: 24px;
     display: flex;
     justify-content: center;
+
+    .cell-animation-enter-active,
+    .cell-animation-leave-active {
+      transition: all 50ms ease;
+    }
+    .cell-animation-enter-from,
+    .cell-animation-leave-to {
+      opacity: 0;
+    }
 
     p {
       text-align: center;
