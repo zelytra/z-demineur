@@ -3,6 +3,7 @@ version: '3'
 services:
   client:
     build:
+      context: z-demineur/Docker
       args:
         - VITE_SERVER_URL=http://zelytra.fr:8080/
     image: z-demineur-client
