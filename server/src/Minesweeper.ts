@@ -1,4 +1,4 @@
-import {Player} from "../../src/object/Player";
+import {Player} from "./Player";
 
 export class Minesweeper {
     public grid: Cell[][];

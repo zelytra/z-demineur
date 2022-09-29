@@ -1,4 +1,7 @@
 #! /bin/bash
-exec git clone https://github.com/zelytra/z-demineur.git
-exec npm install --prefix ./z-demineur/
-exec npm install --prefix ./z-demineur/server/
+eval sudo rm -r ./z-demineur
+eval git clone https://github.com/zelytra/z-demineur.git
+
+eval docker build . -t z-demineur-client
+eval docker build ./server -t z-demineur-server
+

@@ -1,6 +1,6 @@
 import express from 'express';
 import {Cell, Minesweeper, Position} from "./Minesweeper";
-import {Player} from "../../src/object/Player";
+import {Player} from "./Player";
 
 // Server variables
 const app = express();

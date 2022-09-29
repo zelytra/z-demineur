@@ -10,10 +10,10 @@
           v-on:mousedown.right="$emit('flag',cell)"
       >
         <transition-group name="cell-animation">
-          <img src="src/assets/bomb.svg" v-if="cell.hasMine && !cell.isHide" style="width: 18px">
+          <img src="/src/assets/bomb.svg" v-if="cell.hasMine && !cell.isHide" style="width: 18px">
           <p v-if="cell.bombAround > 0 && !cell.hasMine && !cell.isHide"
              :style="{color:getColorBomb(cell.bombAround)}">{{ cell.bombAround }}</p>
-          <img style="width: 24px" v-if="cell.isHide && cell.isFlag" src="src/assets/flag_icon.png"/>
+          <img style="width: 24px" v-if="cell.isHide && cell.isFlag" src="/src/assets/flag_icon.png"/>
         </transition-group>
       </div>
     </div>

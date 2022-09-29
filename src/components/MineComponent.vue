@@ -42,7 +42,6 @@
         <button class="restart" v-on:click="startGame">Recommencer</button>
       </div>
     </div>
-
   </div>
 
 </template>
@@ -65,7 +64,10 @@ let displayPlayerList = ref<Player[]>([]);
 let myPlayer = ref<Player>({name: "", id: "", isLog: false, score: 0, color: '#FFFF', mousePosition: {x: 0, y: 0}});
 
 onBeforeMount(() => {
-  socket = io("http://localhost:4242");
+  const serverAddress = import.meta.env.VITE_SERVER_URL;
+  socket = io(serverAddress);
+  console.log(serverAddress)
+  //socket = io("http://localhost:4242"); // Local dev address
   // Listen first player connection init
   socket.on("joinSuccess", (data: Player) => myPlayer.value = data);
   document.addEventListener('contextmenu', event => event.preventDefault());

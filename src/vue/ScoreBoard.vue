@@ -1,7 +1,7 @@
 <template>
   <div class="score-wrapper">
     <h1>Scoreboard</h1>
-    <li class="score-display" v-bind:key="player" v-for="player of players.sort((a, b) => b.score - a.score)">
+    <li class="score-display" v-bind:key="player.name" v-for="player of players.sort((a, b) => b.score - a.score)">
       <svg v-if="players.indexOf(player)==0" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" x="0px"
            y="0px"
            viewBox="0 0 246.5 246.5" style="enable-background:new 0 0 246.5 246.5;" xml:space="preserve">
