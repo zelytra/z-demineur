@@ -1,7 +1,5 @@
 FROM node:latest as build-stage
 WORKDIR /app
-ARG VITE_SERVER_URL
-ENV VITE_SERVER_URL=$VITE_SERVER_URL
 COPY package*.json ./
 RUN npm install
 COPY ./ .
