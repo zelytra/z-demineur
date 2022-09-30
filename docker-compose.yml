@@ -2,8 +2,6 @@ version: '3'
 
 services:
   client:
-    environment:
-      - VITE_SERVER_URL="http://zelytra.fr:8080"
     image: z-demineur-client
     ports:
       - "80:80"

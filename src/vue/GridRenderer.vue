@@ -76,6 +76,7 @@ function getColorBomb(bombNumber: number) {
     width: 24px;
     height: 24px;
     display: flex;
+    transition: 50ms;
     justify-content: center;
 
     .cell-animation-enter-active,

@@ -1,8 +1,18 @@
 #! /bin/bash
-eval sudo rm -r ./z-demineur
-eval git clone https://github.com/zelytra/z-demineur.git
 
+if [ -d "./z-demineur" ]
+then
+    eval git -C ./z-demineur fetch --force
+    eval git -C ./z-demineur rebase origin/master --force
+else
+    eval git clone https://github.com/zelytra/z-demineur.git
+fi
+
+echo --- CLIENT COMPILATION ---
 eval docker build ./z-demineur/ -t z-demineur-client
+
+echo --- SERVER COMPILATION ---
 eval docker build ./z-demineur/server -t z-demineur-server
 
-eval docker-compose -f ./z-demineur/docker-compose.yml upocker
+echo --- STARTING SERVICES ---
+eval docker-compose -f ./z-demineur/docker-compose.yml up

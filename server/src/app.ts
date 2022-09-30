@@ -10,7 +10,7 @@ const Socketio = require('socket.io')(http, {
         origin: '*',
     }
 });
-const port = 4242;
+const port = 8080;
 
 //Minesweeper
 let game: Minesweeper;
