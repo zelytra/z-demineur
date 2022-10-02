@@ -10,5 +10,5 @@ services:
   server:
     image: z-demineur-server
     ports:
-      - "8080:8080"
+      - "4242:8080"
 
