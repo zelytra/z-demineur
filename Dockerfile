@@ -2,7 +2,7 @@ FROM node:latest as build-stage
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
-RUN npm run preview
+RUN npm run build
 
 FROM nginx as production-stage
 RUN mkdir /app
