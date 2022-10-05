@@ -1,4 +1,4 @@
-import express from 'express';
+import express from "express";
 import {Cell, Minesweeper, Position} from "./Minesweeper";
 import {Player} from "./Player";
 

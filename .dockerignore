@@ -1,3 +1,9 @@
+.git
+.gitignore
 node_modules
-**/dist
-package-lock.json
+npm-debug.log
+Dockerfile*
+docker-compose*
+README.md
+LICENSE
+.vscode

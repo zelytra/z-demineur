@@ -1,8 +1,8 @@
-FROM node:latest
-WORKDIR /srv/app
+FROM node:12-alpine
+WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
 RUN npm run build
 EXPOSE 8080
-CMD ["node", "build/index.js"]
+CMD ["npm", "start"]
