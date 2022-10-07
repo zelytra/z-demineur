@@ -55,6 +55,7 @@ import GridRenderer from "../vue/GridRenderer.vue";
 import {Cell, Minesweeper} from "../object/Minesweeper";
 import {Player} from "../object/Player";
 import ScoreBoard from "../vue/ScoreBoard.vue";
+import {Position} from "../../server/src/Minesweeper";
 
 let socket: Socket;
 let grid = ref<Minesweeper>();
@@ -64,6 +65,7 @@ let displayPlayerList = ref<Player[]>([]);
 let myPlayer = ref<Player>({name: "", id: "", isLog: false, score: 0, color: '#FFFF', mousePosition: {x: 0, y: 0}});
 
 onBeforeMount(() => {
+  //socket = io("http://localhost:8080");
   socket = io("http://zelytra.fr:8080");
   // Listen first player connection init
   socket.on("joinSuccess", (data: Player) => myPlayer.value = data);
@@ -83,12 +85,27 @@ function onJoinGame(playerName: string) {
   socket.emit("join", playerName);
 }
 
+let tempMousePosition: Position;
+
 function mouseMove(event: any) {
   if (!myPlayer.value) return;
+
   let rect = document.getElementById("grid-wrapper")!.getBoundingClientRect();
+
+  if (!tempMousePosition) tempMousePosition = {x: event.pageX - rect.left, y: event.pageY - rect.top};
+
   myPlayer.value.mousePosition.x = event.pageX - rect.left;
   myPlayer.value.mousePosition.y = event.pageY - rect.top;
-  socket.emit("playerUpdate", myPlayer.value)
+
+  if (deltaPosition(tempMousePosition, myPlayer.value.mousePosition) >= 15) {
+    tempMousePosition = myPlayer.value.mousePosition;
+    socket.emit("playerUpdate", myPlayer.value)
+  }
+
+}
+
+function deltaPosition(origin: Position, dynamic: Position): number {
+  return Math.sqrt(Math.pow(dynamic.x - origin.x, 2) + Math.pow(dynamic.y - origin.y, 2));
 }
 
 function onFlag(cell: Cell) {
@@ -96,6 +113,7 @@ function onFlag(cell: Cell) {
 }
 
 function onReveal(cell: Cell) {
+  if (!cell.isHide) return;
   socket.emit("reveal", {player: myPlayer.value, position: cell.position});
 }
 
