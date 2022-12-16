@@ -52,10 +52,9 @@ import MinesweeperHeader from "/src/components/MinesweeperHeader.vue"
 import PlayerMenu from "/src/vue/PlayerMenu.vue";
 import {io, Socket} from "socket.io-client";
 import GridRenderer from "../vue/GridRenderer.vue";
-import {Cell, Minesweeper} from "../object/Minesweeper";
+import {Cell, Minesweeper, Position} from "../object/Minesweeper";
 import {Player} from "../object/Player";
 import ScoreBoard from "../vue/ScoreBoard.vue";
-import {Position} from "../../server/src/Minesweeper";
 
 let socket: Socket;
 let grid = ref<Minesweeper>();

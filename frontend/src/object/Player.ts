@@ -1,4 +1,4 @@
-import {Position} from "../../server/src/Minesweeper";
+import {Position} from "./Minesweeper";
 
 export interface Player {
     name: string,
