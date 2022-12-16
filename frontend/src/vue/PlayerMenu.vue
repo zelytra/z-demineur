@@ -91,6 +91,7 @@ onMounted(() => {
         border-radius: 12px;
         border-radius: 12px;
         border: none;
+        cursor: pointer;
 
         color: var(--primary-text);
         font-family: Jost-Regular;

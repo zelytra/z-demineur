@@ -65,8 +65,7 @@ let displayPlayerList = ref<Player[]>([]);
 let myPlayer = ref<Player>({name: "", id: "", isLog: false, score: 0, color: '#FFFF', mousePosition: {x: 0, y: 0}});
 
 onBeforeMount(() => {
-  //socket = io("http://localhost:8080");
-  socket = io("http://zelytra.fr:8080");
+  socket = io(import.meta.env.VITE_SERVER_URL);
   // Listen first player connection init
   socket.on("joinSuccess", (data: Player) => myPlayer.value = data);
   document.addEventListener('contextmenu', event => event.preventDefault());
