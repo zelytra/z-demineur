@@ -13,6 +13,10 @@ const Socketio = require('socket.io')(http, {
 
 const port = 8080;
 
+http.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+})
+
 //Minesweeper
 let game: Minesweeper;
 let players: Player[] = [];
@@ -99,9 +103,7 @@ Socketio.on("connection", function (socket: any) {
 
 });
 
-http.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
-})
+
 
 function removePlayer(id: string) {
     players.forEach((item, index) => {
