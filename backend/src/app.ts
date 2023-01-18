@@ -10,6 +10,7 @@ const Socketio = require('socket.io')(http, {
         origin: '*',
     }
 });
+
 const port = 8080;
 
 //Minesweeper
@@ -46,7 +47,7 @@ Socketio.on("connection", function (socket: any) {
         socket.emit("joinSuccess", newPlayer);
         Socketio.emit("playerUpdate", players);
 
-        if (!game || !game.isRunning){
+        if (!game || !game.isRunning) {
             game = new Minesweeper(25);
             Socketio.emit("grid", game);
         }
@@ -78,6 +79,7 @@ Socketio.on("connection", function (socket: any) {
             console.log("Player not found")
             return;
         }
+        if (cell.isFlag) return;
         cell.reveal(game, findPlayer);
         game.grid.forEach(x => x.forEach(y => y.hasBeenCheckedByEmptyFinder = false));
 
@@ -95,11 +97,10 @@ Socketio.on("connection", function (socket: any) {
         Socketio.emit("playerUpdate", players);
     });
 
-
 });
 
 http.listen(port, () => {
-    console.log(`Server listening at http://localhost:${port}`);
+    console.log(`Server listening on port ${port}`);
 })
 
 function removePlayer(id: string) {

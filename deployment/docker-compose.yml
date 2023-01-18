@@ -1,15 +1,23 @@
 version: '3'
 
 services:
+
   client:
-    image: z-demineur-client
+    image: zelytra/z-demineur-client
+    container_name: z-demineur-client
     ports:
-      - "81:80"
+      - "9845:80"
+    environment:
+      VITE_SERVER_URL: ${SERVER_URL}
     depends_on:
-      - server
+     - server
+    restart: unless-stopped
 
   server:
-    image: z-demineur-server
+    image: zelytra/z-demineur-server
+    container_name: z-demineur-server
     ports:
-      - "4200:8080"
+      - "8080:8080"
+    restart: unless-stopped
+
 

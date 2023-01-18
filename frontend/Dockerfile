@@ -14,7 +14,7 @@ RUN rm -rf /usr/share/nginx/html/*
 # Copy from the stage 1
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY ./env_runtime_editor.sh /env_runtime_editor.sh
-RUN chmod +x /env_runtime_editor.sh
+RUN chmod a+x /env_runtime_editor.sh
 
 EXPOSE 80
 ENTRYPOINT ["/env_runtime_editor.sh"]
