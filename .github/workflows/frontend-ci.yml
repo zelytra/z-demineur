@@ -1,0 +1,33 @@
+name: "[FRONTEND] CI"
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+jobs:
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 18.x ]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: z-demineur/z-demineur-frontend/package-lock.json
+      - run: npm ci
+        name: Node install
+        working-directory: "z-demineur/z-demineur-frontend"
+
+      - run: npm run build --if-present
+        working-directory: "z-demineur/z-demineur-frontend"
+        name: Node build

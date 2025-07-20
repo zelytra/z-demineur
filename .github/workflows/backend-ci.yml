@@ -1,0 +1,46 @@
+name: "[BACKEND] CI"
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+jobs:
+  backend-build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 'z-demineur/z-demineur-backend'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build with Maven
+        run: mvn quarkus:build package
+
+#  backend-test:
+#    name: "Unit Tests"
+#    runs-on: ubuntu-latest
+#    permissions:
+#      checks: write
+#      contents: read
+#    defaults:
+#      run:
+#        working-directory: 'z-demineur/z-demineur-backend'
+#    steps:
+#      - uses: actions/checkout@v3
+#      - name: Set up JDK 17
+#        uses: actions/setup-java@v3
+#        with:
+#          java-version: '17'
+#          distribution: 'temurin'
+#      - name: Build and Run Tests
+#        run: mvn test --batch-mode --fail-at-end
+#      - name: Publish Test Report
+#        uses: scacap/action-surefire-report@v1

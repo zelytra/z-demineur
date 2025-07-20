@@ -1,0 +1,101 @@
+name: "[ DEPLOY ] CD"
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+jobs:
+  build_and_push:
+    name: "FRONTEND Build & Push"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          context: "z-demineur/z-demineur-frontend"
+          tags: zelytra/z-demineur-frontend:latest
+
+  build_and_push2:
+    name: "BACKEND Build & Push"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          context: "z-demineur/z-demineur-backend"
+          tags: zelytra/z-demineur-backend:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    name: "Deploy latest"
+    needs:
+      - build_and_push
+      - build_and_push2
+    steps:
+      # Étape 1 : Vérifier le code du repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Étape 2 : Installer Helm
+      - name: Install Helm
+        run: |
+          curl https://get.helm.sh/helm-v3.8.2-linux-amd64.tar.gz -o helm.tar.gz
+          tar -xvzf helm.tar.gz
+          sudo mv linux-amd64/helm /usr/local/bin/helm
+          helm version
+
+      # Étape 3 : Configurer kubectl pour accéder au cluster Kubernetes
+      - name: Set up kubectl
+        uses: Azure/setup-kubectl@v4
+
+
+      # Étape 4 : Authentifier dans votre cluster Kubernetes
+      - name: Set up Kubernetes access
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
+          export KUBECONFIG=$(pwd)/kubeconfig.yaml
+
+      # Étape 5 : Déployer le Chart Helm depuis le repository local
+      - name: Deploy Helm Chart
+        run: |
+          export KUBECONFIG=$(pwd)/kubeconfig.yaml
+          helm dependency build ./helm/z-demineur
+          helm upgrade --install z-demineur-portfolio ./helm/z-demineur \
+          --namespace default \
+          --values ./helm/z-demineur/values.yaml \
+
+      # Étape 6 : Vérifier l'état du déploiement
+      - name: Verify deployment
+        run: |
+          export KUBECONFIG=$(pwd)/kubeconfig.yaml
+          kubectl get pods -n default
