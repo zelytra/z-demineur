@@ -19,7 +19,7 @@ spec:
     - host: "demineur.zelytra.fr"
       http:
         paths:
-          - path: {{.Values.ingress.path | default "/socket.io" }}
+          - path: {{.Values.ingress.path | default "/socket.io/" }}
             pathType: Prefix
             backend:
               service:
