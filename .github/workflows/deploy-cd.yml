@@ -3,12 +3,6 @@ name: "[ DEPLOY ] CD"
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - ready_for_review
 
 jobs:
   build_and_push:
