@@ -90,7 +90,7 @@ jobs:
         run: |
           export KUBECONFIG=$(pwd)/kubeconfig.yaml
           helm dependency build ./helm/z-demineur
-          helm upgrade --install z-demineur-portfolio ./helm/z-demineur \
+          helm upgrade --install z-demineur ./helm/z-demineur \
           --namespace default \
           --values ./helm/z-demineur/values.yaml \
 

@@ -1,0 +1,32 @@
+---
+## z-demineur-frontend image version
+##
+
+deployment:
+  image:
+    repository: /z-demineur-frontend
+    pullPolicy: Always
+  replicas: 1
+  securityContext:
+    enabled: true
+  rolling:
+    maxSurge: "25%"
+    maxUnavailable: "25%"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 100M
+    limits:
+      cpu: 200m
+      memory: 200M
+
+service:
+  port: 80
+  targetPort: 8080
+
+ingress:
+  prefix: ""
+  suffix: ""
+
+config:
+  LOGGER_NAME: z-demineur-frontend-logger

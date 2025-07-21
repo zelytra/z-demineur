@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "z-demineur-frontend.fullname" $ }}
+  labels:
+    app: {{ template "z-demineur-frontend.fullname" $ }}
+    chart: {{ template "z-demineur-frontend.chart" $ }}
+    heritage: {{ $.Release.Service }}
+    release: {{ $.Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "z-demineur-frontend.fullname" $ }}
+      release: {{ $.Release.Name }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: {{ $.Values.deployment.rolling.maxSurge }}
+      maxUnavailable: {{ $.Values.deployment.rolling.maxUnavailable }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "z-demineur-frontend.fullname" $ }}
+        release: {{ $.Release.Name }}
+      annotations:
+        {{ if eq $.Values.global.config.PLATFORM "dv1"}}
+        timestamp: "{{ date "20060102150405" now }}"
+        {{ end }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") $ | sha256sum }}
+    spec:
+      #      imagePullSecrets:
+      #        - name: {{.Release.Name}}-monorepo-docker-secret
+      containers:
+        - name: z-demineur-frontend
+          image: {{ $.Values.global.docker.artifactoryUrl }}{{ $.Values.deployment.image.repository }}:{{ $.Values.global.docker.imageTag.zetroBackend }}
+          imagePullPolicy: {{ $.Values.deployment.image.pullPolicy | quote }}
+          tty: true
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: {{ template "z-demineur-frontend.fullname" $ }}-env
+          resources:
+            requests:
+              cpu: {{ $.Values.deployment.resources.requests.cpu }}
+              memory: {{ $.Values.deployment.resources.requests.memory }}
+            limits:
+              cpu: {{ $.Values.deployment.resources.limits.cpu }}
+              memory: {{ $.Values.deployment.resources.limits.memory }}
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /health
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            periodSeconds: 5
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /health
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          {{ if $.Values.deployment.securityContext.enabled }}
+          securityContext:
+            runAsUser: 1000
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ "ALL" ]
+          {{ end }}
