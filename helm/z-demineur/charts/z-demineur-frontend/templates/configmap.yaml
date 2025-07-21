@@ -12,4 +12,4 @@ data:
   APP_NAME: {{ $.Chart.Name | quote }}
   LOGGER_NAME: {{ $.Values.config.LOGGER_NAME | quote }}
 
-  WIKI_REPO_URL: "ZeTro-dev/portfolio"
+  VITE_SERVER_URL: "/api"
