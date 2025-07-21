@@ -12,4 +12,4 @@ for file in $ROOT_DIR/assets/index.*.js* $ROOT_DIR/index.html; do
 done
 
 echo "Starting Nginx"
-nginx -g 'daemon off;'
+exec nginx -g 'daemon off;'

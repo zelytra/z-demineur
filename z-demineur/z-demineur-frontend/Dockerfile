@@ -1,6 +1,6 @@
 # Stage 1: Build the Node.js application
 FROM node:latest AS build-stage
-ARG VERSION=0.0.0
+ARG VERSION=1.0.0
 ENV VERSION=$VERSION
 ENV NODE_OPTIONS="--max_old_space_size=8192"
 
