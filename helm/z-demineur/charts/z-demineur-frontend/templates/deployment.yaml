@@ -32,7 +32,7 @@ spec:
       #        - name: {{.Release.Name}}-monorepo-docker-secret
       containers:
         - name: z-demineur-frontend
-          image: {{ $.Values.global.docker.artifactoryUrl }}{{ $.Values.deployment.image.repository }}:{{ $.Values.global.docker.imageTag.zetroBackend }}
+          image: {{ $.Values.global.docker.artifactoryUrl }}{{ $.Values.deployment.image.repository }}:{{ $.Values.global.docker.imageTag.zdemineurFrontend }}
           imagePullPolicy: {{ $.Values.deployment.image.pullPolicy | quote }}
           tty: true
           ports:
