@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "z-demineur-backend.fullname" $ }}-env
+  labels:
+    app: {{ template "z-demineur-backend.fullname" $ }}
+    chart: {{ template "z-demineur-backend.chart" $ }}
+    heritage: {{ $.Release.Service }}
+    release: {{ $.Release.Name }}
+data:
+  PLATFORM: {{ $.Values.global.config.PLATFORM | quote }}
+  APP_NAME: {{ $.Chart.Name | quote }}
+  LOGGER_NAME: {{ $.Values.config.LOGGER_NAME | quote }}

@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ template "z-demineur-backend.fullname" $ }}
+  labels:
+    app: {{ template "z-demineur-backend.fullname" $ }}
+    chart: {{ template "z-demineur-backend.chart" $ }}
+    heritage: {{ $.Release.Service }}
+    release: {{ $.Release.Name }}
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  tls:
+    - hosts:
+        - demineur.zelytra.fr
+      secretName: demineur-zelytra-fr-tls
+  ingressClassName: traefik
+  rules:
+    - host: "demineur.zelytra.fr"
+      http:
+        paths:
+          - path: {{.Values.ingress.path | default "/socket.io/" }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "z-demineur-backend.fullname" $ }}
+                port:
+                  number: {{.Values.service.port}}

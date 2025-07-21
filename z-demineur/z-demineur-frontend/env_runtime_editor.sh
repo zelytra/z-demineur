@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ROOT_DIR=/usr/share/nginx/html
+ROOT_DIR=/tmp/html
 
 # Replace env vars in JavaScript files
 echo "Replacing env constants in JS"
@@ -12,4 +12,4 @@ for file in $ROOT_DIR/assets/index.*.js* $ROOT_DIR/index.html; do
 done
 
 echo "Starting Nginx"
-nginx -g 'daemon off;'
+exec nginx -g 'daemon off;'

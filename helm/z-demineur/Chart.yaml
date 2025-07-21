@@ -1,0 +1,5 @@
+apiVersion: v2
+name: z-demineur
+version: 1.0.0
+description: Charts for zetro portfolio
+home: https://gitlab/monorepo-template/-/tree/master/app1/helm
