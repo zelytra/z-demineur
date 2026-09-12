@@ -13,12 +13,15 @@ deployment:
     maxSurge: "25%"
     maxUnavailable: "25%"
   resources:
+    # Observed on zelytra.fr: ~0m CPU / ~130Mi RSS at idle (Node process).
+    # Requests sized on real usage; memory limit raised so a 130Mi process
+    # is not sitting right under the OOM threshold.
     requests:
-      cpu: 100m
-      memory: 100M
+      cpu: 20m
+      memory: 128Mi
     limits:
       cpu: 200m
-      memory: 200M
+      memory: 256Mi
 
 service:
   port: 80

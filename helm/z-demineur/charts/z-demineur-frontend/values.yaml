@@ -13,12 +13,13 @@ deployment:
     maxSurge: "25%"
     maxUnavailable: "25%"
   resources:
+    # Static nginx serving the SPA: observed ~1m CPU / ~5Mi on zelytra.fr.
     requests:
-      cpu: 100m
-      memory: 100M
+      cpu: 10m
+      memory: 16Mi
     limits:
-      cpu: 200m
-      memory: 200M
+      cpu: 100m
+      memory: 64Mi
 
 service:
   port: 80
